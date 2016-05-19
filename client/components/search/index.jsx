@@ -175,15 +175,13 @@ const Search = React.createClass( {
 	},
 
 	closeSearch: function( event ) {
-		var input;
-
 		event.preventDefault();
 
 		if ( this.props.disabled ) {
 			return;
 		}
 
-		input = ReactDom.findDOMNode( this.refs.searchInput );
+		const input = ReactDom.findDOMNode( this.refs.searchInput );
 
 		this.setState( {
 			keyword: '',
@@ -203,7 +201,7 @@ const Search = React.createClass( {
 	},
 
 	keyUp: function( event ) {
-		if ( event.which === 13 && isMobile() ) {
+		if ( event.key === 'Enter' && isMobile() ) {
 			//dismiss soft keyboards
 			this.blur();
 		}
@@ -252,7 +250,7 @@ const Search = React.createClass( {
 		};
 
 		searchClass = classNames( this.props.additionalClasses, {
-			'is-pinned': this.props.pinned,
+			'is-expanded-to-container': this.props.fitsContainer,
 			'is-open': isOpenUnpinnedOrQueried,
 			'is-searching': this.props.searching,
 			rtl: this.props.dir === 'rtl',
