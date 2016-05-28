@@ -1,6 +1,7 @@
 // External dependencies
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import debugModule from 'debug';
 import get from 'lodash/get';
 import classnames from 'classnames';
@@ -18,7 +19,7 @@ const debug = debugModule( 'calypso:reader:start' ); //eslint-disable-line no-un
 
 const StartCard = React.createClass( {
 	onCardInteraction() {
-		recordRecommendationInteraction( this.props.recommendationId );
+		this.props.recordRecommendationInteraction( this.props.recommendationId );
 	},
 
 	render() {
@@ -66,5 +67,8 @@ export default connect(
 			postId,
 			site
 		};
-	}
+	},
+	( dispatch ) => bindActionCreators( {
+		recordRecommendationInteraction
+	}, dispatch )
 )( StartCard );

@@ -3,6 +3,7 @@
  */
 import { combineReducers } from 'redux';
 import keyBy from 'lodash/keyBy';
+import union from 'lodash/union';
 
 /**
  * Internal dependencies
@@ -12,6 +13,7 @@ import {
 	READER_START_RECOMMENDATIONS_REQUEST,
 	READER_START_RECOMMENDATIONS_REQUEST_SUCCESS,
 	READER_START_RECOMMENDATIONS_REQUEST_FAILURE,
+	READER_START_RECOMMENDATION_INTERACTION,
 	SERIALIZE,
 	DESERIALIZE,
 } from 'state/action-types';
@@ -62,7 +64,21 @@ export function isRequestingRecommendations( state = false, action ) {
 	return state;
 }
 
+export function recommendationsInteractedWith( state = [], action ) {
+	switch ( action.type ) {
+		case READER_START_RECOMMENDATION_INTERACTION:
+			return union( state, [ action.recommendationId ] );
+
+		case SERIALIZE:
+		case DESERIALIZE:
+			return state;
+	}
+
+	return state;
+}
+
 export default combineReducers( {
 	items,
-	isRequestingRecommendations
+	isRequestingRecommendations,
+	recommendationsInteractedWith
 } );
