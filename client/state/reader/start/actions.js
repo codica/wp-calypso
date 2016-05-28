@@ -31,6 +31,8 @@ export function receiveRecommendations( recommendations ) {
 	};
 }
 
+export function recordRecommendationInteraction() { }
+
 /**
  * Triggers a network request to fetch recommendations.
  *

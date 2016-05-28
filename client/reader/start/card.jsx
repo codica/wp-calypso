@@ -10,37 +10,45 @@ import Card from 'components/card';
 import StartPostPreview from './post-preview';
 import StartCardHeader from './card-header';
 import StartCardFooter from './card-footer';
+import { recordRecommendationInteraction } from 'state/reader/start/actions';
 import { getRecommendationById } from 'state/reader/start/selectors';
 import { getSite } from 'state/reader/sites/selectors';
 
 const debug = debugModule( 'calypso:reader:start' ); //eslint-disable-line no-unused-vars
 
-const StartCard = ( { site, siteId, postId } ) => {
-	const headerImage = site.header_image;
+const StartCard = React.createClass( {
+	onCardInteraction() {
+		recordRecommendationInteraction( this.props.recommendationId );
+	},
 
-	let heroStyle;
-	if ( headerImage ) {
-		heroStyle = {
-			backgroundImage: `url("${ headerImage.url }")`
-		};
-	}
+	render() {
+		const { site, siteId, postId } = this.props;
+		const headerImage = site.header_image;
 
-	const cardClasses = classnames(
-		'reader-start-card',
-		{
-			'has-post-preview': ( postId > 0 )
+		let heroStyle;
+		if ( headerImage ) {
+			heroStyle = {
+				backgroundImage: `url("${ headerImage.url }")`
+			};
 		}
-	);
 
-	return (
-		<Card className={ cardClasses }>
-			<div className="reader-start-card__hero" style={ heroStyle }></div>
-			<StartCardHeader siteId={ siteId } />
-			{ postId > 0 && <StartPostPreview siteId={ siteId } postId={ postId } /> }
-			<StartCardFooter siteId={ siteId } />
-		</Card>
-	);
-};
+		const cardClasses = classnames(
+			'reader-start-card',
+			{
+				'has-post-preview': ( postId > 0 )
+			}
+		);
+
+		return (
+			<Card className={ cardClasses } onClick={ this.onCardInteraction }>
+				<div className="reader-start-card__hero" style={ heroStyle }></div>
+				<StartCardHeader siteId={ siteId } />
+				{ postId > 0 && <StartPostPreview siteId={ siteId } postId={ postId } /> }
+				<StartCardFooter siteId={ siteId } />
+			</Card>
+		);
+	}
+} );
 
 StartCard.propTypes = {
 	recommendationId: React.PropTypes.number.isRequired
