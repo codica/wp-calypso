@@ -48,15 +48,25 @@ export function recordRecommendationInteraction( recommendationId ) {
 /**
  * Triggers a network request to fetch recommendations.
  *
+ * @param  {Integer} originSiteId Origin site ID
+ * @param  {Integer} originPostId Origin post ID
+ * @param  {Integer} limit Maximum number of results to return
  * @return {Function}        Action thunk
  */
-export function requestRecommendations() {
+export function requestRecommendations( originSiteId, originPostId, limit ) {
 	return ( dispatch ) => {
 		dispatch( {
 			type: READER_START_RECOMMENDATIONS_REQUEST,
 		} );
 
-		return wpcom.undocumented().readRecommendationsStart( { meta: 'site,post' } )
+		const query = {
+			meta: 'site,post',
+			origin_site_ID: originSiteId,
+			origin_post_ID: originPostId,
+			number: limit
+		};
+
+		return wpcom.undocumented().readRecommendationsStart( query )
 			.then( ( data ) => {
 				// Collect sites and posts from meta, and receive them separately
 				const sites = map( data.recommendations, property( 'meta.data.site' ) );

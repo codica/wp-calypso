@@ -14,6 +14,7 @@ import StartCardFooter from './card-footer';
 import { recordRecommendationInteraction } from 'state/reader/start/actions';
 import { getRecommendationById, hasInteractedWithRecommendation, getChildRecommendationId } from 'state/reader/start/selectors';
 import { getSite } from 'state/reader/sites/selectors';
+import QueryReaderStartRecommendations from 'components/data/query-reader-start-recommendations';
 
 const debug = debugModule( 'calypso:reader:start' ); //eslint-disable-line no-unused-vars
 
@@ -22,8 +23,17 @@ const StartCard = React.createClass( {
 		this.props.recordRecommendationInteraction( this.props.recommendationId );
 	},
 
+	renderChildRecommendation( parentRecommendation ) {
+		return(
+			<span>
+				<QueryReaderStartRecommendations originSiteId={ parentRecommendation.recommended_site_ID } originPostId={ parentRecommendation.recommended_post_ID } limit={ 1 } />
+				<StartCard recommendationId={ this.props.childRecommendationId } />
+			</span>
+		);
+	},
+
 	render() {
-		const { site, siteId, postId } = this.props;
+		const { recommendation, site, siteId, postId } = this.props;
 		const headerImage = site.header_image;
 
 		let heroStyle;
@@ -48,7 +58,7 @@ const StartCard = React.createClass( {
 					{ postId > 0 && <StartPostPreview siteId={ siteId } postId={ postId } /> }
 					<StartCardFooter siteId={ siteId } />
 				</Card>
-				{ this.props.showChildRecommendation && 'show child rec ' + this.props.childRecommendationId }
+				{ this.props.showChildRecommendation && this.props.childRecommendationId && this.renderChildRecommendation( recommendation ) }
 			</span>
 		);
 	}
@@ -71,6 +81,7 @@ export default connect(
 		}
 
 		return {
+			recommendation,
 			siteId,
 			postId,
 			site,

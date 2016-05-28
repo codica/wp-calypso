@@ -17,7 +17,7 @@ class QueryReaderStartRecommendations extends Component {
 			return;
 		}
 
-		this.props.requestRecommendations( this.props.recommendationsInteractedWith );
+		this.props.requestRecommendations( this.props.originSiteId, this.props.originPostId, this.props.limit );
 	}
 
 	render() {
@@ -27,18 +27,23 @@ class QueryReaderStartRecommendations extends Component {
 
 QueryReaderStartRecommendations.propTypes = {
 	isRequestingRecommendations: PropTypes.bool,
-	requestRecommendations: PropTypes.func
+	requestRecommendations: PropTypes.func,
+	originSiteId: PropTypes.number,
+	originPostId: PropTypes.number,
+	limit: PropTypes.number
 };
 
 QueryReaderStartRecommendations.defaultProps = {
-	requestRecommendations: () => {}
+	requestRecommendations: () => {},
+	originSiteId: null,
+	originPostId: null,
+	limit: 10
 };
 
 export default connect(
 	( state ) => {
 		return {
-			isRequestingRecommendations: isRequestingRecommendations( state ),
-			recommendationsInteractedWith: getRecommendationsInteractedWith( state )
+			isRequestingRecommendations: isRequestingRecommendations( state )
 		};
 	},
 	( dispatch ) => {
