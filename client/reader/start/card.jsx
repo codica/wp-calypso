@@ -12,7 +12,7 @@ import StartPostPreview from './post-preview';
 import StartCardHeader from './card-header';
 import StartCardFooter from './card-footer';
 import { recordRecommendationInteraction } from 'state/reader/start/actions';
-import { getRecommendationById } from 'state/reader/start/selectors';
+import { getRecommendationById, hasInteractedWithRecommendation, getChildRecommendationId } from 'state/reader/start/selectors';
 import { getSite } from 'state/reader/sites/selectors';
 
 const debug = debugModule( 'calypso:reader:start' ); //eslint-disable-line no-unused-vars
@@ -41,12 +41,15 @@ const StartCard = React.createClass( {
 		);
 
 		return (
-			<Card className={ cardClasses } onClick={ this.onCardInteraction }>
-				<div className="reader-start-card__hero" style={ heroStyle }></div>
-				<StartCardHeader siteId={ siteId } />
-				{ postId > 0 && <StartPostPreview siteId={ siteId } postId={ postId } /> }
-				<StartCardFooter siteId={ siteId } />
-			</Card>
+			<span>
+				<Card className={ cardClasses } onClick={ this.onCardInteraction }>
+					<div className="reader-start-card__hero" style={ heroStyle }></div>
+					<StartCardHeader siteId={ siteId } />
+					{ postId > 0 && <StartPostPreview siteId={ siteId } postId={ postId } /> }
+					<StartCardFooter siteId={ siteId } />
+				</Card>
+				{ this.props.showChildRecommendation && 'show child rec ' + this.props.childRecommendationId }
+			</span>
 		);
 	}
 } );
@@ -61,11 +64,18 @@ export default connect(
 		const siteId = get( recommendation, 'recommended_site_ID' );
 		const postId = get( recommendation, 'recommended_post_ID' );
 		const site = getSite( state, siteId );
+		const showChildRecommendation = hasInteractedWithRecommendation( state, ownProps.recommendationId );
+		let childRecommendationId = null;
+		if ( showChildRecommendation ) {
+			childRecommendationId = getChildRecommendationId( state, ownProps.recommendationId );
+		}
 
 		return {
 			siteId,
 			postId,
-			site
+			site,
+			showChildRecommendation,
+			childRecommendationId
 		};
 	},
 	( dispatch ) => bindActionCreators( {
