@@ -36,12 +36,18 @@ export function receiveRecommendations( recommendations ) {
  * Returns an action object to signal that a recommendation has been interacted with.
  *
  * @param  {Integer} recommendationId Recommendation ID
- * @return {Object} Action object
+ * @param  {Integer} siteId Site ID
+ * @param  {Integer} postId Post ID
+ * @return {Function} Action thunk
  */
-export function recordRecommendationInteraction( recommendationId ) {
-	return {
-		type: READER_START_RECOMMENDATION_INTERACTION,
-		recommendationId
+export function recordRecommendationInteraction( recommendationId, siteId, postId ) {
+	return( dispatch ) => {
+		// @todo check if we already have a recommendation first
+		dispatch( requestRecommendations( siteId, postId ) );
+		dispatch( {
+			type: READER_START_RECOMMENDATION_INTERACTION,
+			recommendationId
+		} );
 	};
 }
 
@@ -51,7 +57,7 @@ export function recordRecommendationInteraction( recommendationId ) {
  * @param  {Integer} originSiteId Origin site ID
  * @param  {Integer} originPostId Origin post ID
  * @param  {Integer} limit Maximum number of results to return
- * @return {Function}        Action thunk
+ * @return {Function} Action thunk
  */
 export function requestRecommendations( originSiteId, originPostId, limit ) {
 	return ( dispatch ) => {

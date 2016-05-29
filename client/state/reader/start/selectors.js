@@ -3,6 +3,7 @@
  */
 import includes from 'lodash/includes';
 import find from 'lodash/find';
+import map from 'lodash/map';
 import debugModule from 'debug';
 
 /**
@@ -30,7 +31,9 @@ export function isRequestingRecommendations( state ) {
  * @return {Object} Recommendation
  */
 export function getRecommendationById( state, recommendationId ) {
-	return state.reader.start.items[ recommendationId ];
+	return find( state.reader.start.items, ( item ) => {
+		return item.ID === recommendationId;
+	} );
 }
 
 /**
@@ -50,7 +53,7 @@ export function getRecommendations( state ) {
  * @return {Array} Recommendations IDs
  */
 export const getRecommendationIds = createSelector(
-	( state ) => Object.keys( state.reader.start.items ).map( Number ),
+	( state ) => map( state.reader.start.items, 'ID' ),
 	( state ) => [ state.reader.start.items ]
 );
 
@@ -63,9 +66,7 @@ export const getRecommendationIds = createSelector(
  */
 export function getChildRecommendationId( state, recommendationId ) {
 	const recommendation = getRecommendationById( state, recommendationId );
-	debug( recommendation );
 	const matchingRecommendation = find( state.reader.start.items, ( item ) => {
-		debug( item );
 		// @todo will this work for site only recs?
 		return recommendation.recommended_site_ID === item.origin_site_ID && recommendation.recommended_post_ID === item.origin_post_ID;
 	} );
