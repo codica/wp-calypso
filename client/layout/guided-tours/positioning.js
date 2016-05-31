@@ -4,7 +4,6 @@
 import viewport from 'lib/viewport';
 import scrollTo from 'lib/scroll-to';
 
-const BULLSEYE_RADIUS = 6;
 const DIALOG_WIDTH = 410;
 const DIALOG_HEIGHT = 150;
 const DIALOG_PADDING = 10;
@@ -54,23 +53,34 @@ export const posToCss = ( { x, y } ) => ( {
 	left: x ? x + 'px' : undefined,
 } );
 
-const bullseyePositioners = {
-	below: ( { left, right, bottom } ) => ( {
-		x: left + middle( left, right ) - BULLSEYE_RADIUS,
-		y: bottom - BULLSEYE_RADIUS * 1.5,
-	} ),
-
-	beside: ( { top, bottom, right } ) => ( {
-		x: right - BULLSEYE_RADIUS * 1.5,
-		y: top + middle( top, bottom ) - BULLSEYE_RADIUS,
-	} ),
-
-	center: () => ( {} ),
-	middle: () => ( {} ),
-};
-
 export function targetForSlug( targetSlug ) {
 	return query( '[data-tip-target="' + targetSlug + '"]' )[0];
+}
+
+export function getValidatedArrowPosition( { targetSlug, arrow, stepPos } ) {
+	const target = targetForSlug( targetSlug );
+	const rect = target && target.getBoundingClientRect
+		? target.getBoundingClientRect()
+		: global.window.document.body.getBoundingClientRect();
+
+	if ( stepPos.y >= rect.top &&
+		stepPos.y <= rect.bottom &&
+		stepPos.x >= rect.left &&
+		stepPos.x <= rect.right ) {
+		// step contained within target rect
+		return 'none';
+	}
+
+	if ( ( arrow.startsWith( 'left' ) ||
+		arrow.startsWith( 'right' ) ) &&
+		DIALOG_WIDTH > 0.98 * document.documentElement.clientWidth ) {
+		// window not wide enough for adding an arrow
+		// seems good enough for now, can take other things into account later
+		// (e.g.: maybe we need to point downwards)
+		return 'top-left';
+	}
+
+	return arrow;
 }
 
 export function getStepPosition( { placement = 'center', targetSlug } ) {
@@ -86,16 +96,6 @@ export function getStepPosition( { placement = 'center', targetSlug } ) {
 		y: position.y - scrollDiff +
 			( scrollDiff !== 0 ? DIALOG_PADDING : 0 )
 	};
-}
-
-export function getBullseyePosition( { placement = 'center', targetSlug } ) {
-	const target = targetForSlug( targetSlug );
-
-	const rect = target
-		? target.getBoundingClientRect()
-		: global.window.document.body.getBoundingClientRect();
-
-	return bullseyePositioners[ validatePlacement( placement ) ]( rect );
 }
 
 function validatePlacement( placement, target ) {

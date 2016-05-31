@@ -90,6 +90,9 @@ class GuidedTours extends Component {
 	}
 
 	quit( options = {} ) {
+		const sidebar = query( '#secondary .sidebar' )[ 0 ];
+		scrollTo( { y: 0, container: sidebar } );
+
 		this.currentTarget && this.currentTarget.classList.remove( 'guided-tours__overlay' );
 		this.props.quitGuidedTour( Object.assign( {
 			stepName: this.props.tourState.stepName,
