@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 /**
  * Internal dependencies
  */
-import { isRequestingRecommendations, getRecommendationsInteractedWith } from 'state/reader/start/selectors';
+import { isRequestingRecommendations } from 'state/reader/start/selectors';
 import { requestRecommendations } from 'state/reader/start/actions';
 
 class QueryReaderStartRecommendations extends Component {
@@ -17,7 +17,7 @@ class QueryReaderStartRecommendations extends Component {
 			return;
 		}
 
-		this.props.requestRecommendations( this.props.originSiteId, this.props.originPostId, this.props.limit );
+		this.props.requestRecommendations();
 	}
 
 	render() {
@@ -27,17 +27,11 @@ class QueryReaderStartRecommendations extends Component {
 
 QueryReaderStartRecommendations.propTypes = {
 	isRequestingRecommendations: PropTypes.bool,
-	requestRecommendations: PropTypes.func,
-	originSiteId: PropTypes.number,
-	originPostId: PropTypes.number,
-	limit: PropTypes.number
+	requestRecommendations: PropTypes.func
 };
 
 QueryReaderStartRecommendations.defaultProps = {
-	requestRecommendations: () => {},
-	originSiteId: null,
-	originPostId: null,
-	limit: 10
+	requestRecommendations: () => {}
 };
 
 export default connect(
