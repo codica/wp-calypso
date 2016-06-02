@@ -12,9 +12,9 @@ import {
 
 describe( 'reducer', () => {
 	describe( '#items()', () => {
-		it( 'should default to an empty object', () => {
-			const state = items( undefined, {} );
-			expect( state ).to.eql( {} );
+		it( 'should default to an empty array', () => {
+			const state = items( undefined, [] );
+			expect( state ).to.eql( [] );
 		} );
 	} );
 } );

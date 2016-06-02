@@ -4,6 +4,7 @@
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import property from 'lodash/property';
+import debugModule from 'debug';
 
 /**
  * Internal dependencies
@@ -18,6 +19,11 @@ import {
 } from 'state/action-types';
 import { updateSites } from 'state/reader/sites/actions';
 import { receivePosts } from 'state/reader/posts/actions';
+
+/**
+ * Module variables
+ */
+const debug = debugModule( 'calypso:redux:reader-start-recommendations' );
 
 /**
  * Returns an action object to signal that recommendation objects have been received.
@@ -42,8 +48,11 @@ export function receiveRecommendations( recommendations ) {
  */
 export function recordRecommendationInteraction( recommendationId, siteId, postId ) {
 	return( dispatch ) => {
+		debug( 'User interacted with recommendation ' + recommendationId );
+
 		// @todo check if we already have a recommendation first
-		dispatch( requestRecommendations( siteId, postId ) );
+		const numberOfRecommendations = 1;
+		dispatch( requestRecommendations( siteId, postId, numberOfRecommendations ) );
 		dispatch( {
 			type: READER_START_RECOMMENDATION_INTERACTION,
 			recommendationId
@@ -71,6 +80,8 @@ export function requestRecommendations( originSiteId, originPostId, limit ) {
 			origin_post_ID: originPostId,
 			number: limit
 		};
+
+		debug( 'Requesting recommendations for site ' + originSiteId + ' and post ' + originPostId );
 
 		return wpcom.undocumented().readRecommendationsStart( query )
 			.then( ( data ) => {
