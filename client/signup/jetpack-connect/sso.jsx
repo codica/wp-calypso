@@ -24,6 +24,7 @@ import config from 'config';
 import EmptyContent from 'components/empty-content';
 import Notice from 'components/notice';
 import NoticeAction from 'components/notice/notice-action';
+import Gridicon from 'components/gridicon';
 
 /*
  * Module variables
@@ -205,6 +206,7 @@ const JetpackSSOForm = React.createClass( {
 							rel="external"
 							href={ get( this.props, 'blogDetails.admin_url', '#' ) }
 							onClick={ this.onCancelClick }>
+							<Gridicon icon="arrow-left" size={ 18 } />
 							{ this.translate( 'Return to %(siteName)s', {
 								args: {
 									siteName: get( this.props, 'blogDetails.title' )
