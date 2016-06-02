@@ -118,7 +118,7 @@ class GoogleVoucherDetails extends Component {
 			>
 				<div className="google-voucher-dialog__header">
 					<img
-						src="/calypso/images/google-adwords/google-adwords-voucher.svg"
+						src="/calypso/images/google-vouchers/google-voucher.svg"
 						className="google-voucher-dialog__header__image" />
 
 					<div className="google-voucher-dialog__header__text">
