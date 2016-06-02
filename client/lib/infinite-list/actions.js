@@ -4,7 +4,8 @@
 const Dispatcher = require( 'dispatcher' ),
 	scrollStore = require( 'lib/infinite-list/scroll-store' ),
 	positionsStore = require( 'lib/infinite-list/positions-store' ),
-	isEqual = require( 'lodash/isEqual' );
+	isEqual = require( 'lodash/isEqual' ),
+	throttle = require( 'lodash/throttle' );
 
 /**
  * Module variables
@@ -13,7 +14,7 @@ let _lastCalledPositions = null,
 	_lastCalledScroll = null;
 
 module.exports = {
-	storePositions: function( url, positions ) {
+	storePositions: throttle( function( url, positions ) {
 		if ( ! _lastCalledPositions ) {
 			setTimeout( () => {
 				let storedPositions = positionsStore.get( _lastCalledPositions.url );
@@ -27,9 +28,9 @@ module.exports = {
 				_lastCalledPositions = null;
 			}, 0 );
 		}
-		_lastCalledPositions = { url, positions }
-	},
-	storeScroll: function( url, scrollPosition ) {
+		_lastCalledPositions = { url, positions };
+	}, 1000, { leading: false } ),
+	storeScroll: throttle( function( url, scrollPosition ) {
 		if ( ! _lastCalledScroll ) {
 			setTimeout( () => {
 				let storedScroll = scrollStore.get( _lastCalledScroll.url );
@@ -43,6 +44,6 @@ module.exports = {
 				_lastCalledScroll = null;
 			}, 0 );
 		}
-		_lastCalledScroll = { url, scrollPosition }
-	}
+		_lastCalledScroll = { url, scrollPosition };
+	}, 1000, { leading: false } )
 };
