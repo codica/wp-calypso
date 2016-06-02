@@ -12,6 +12,7 @@ import GoogleVoucherDetails from './google-voucher-details';
 import i18n from 'lib/mixins/i18n';
 import { isBusiness } from 'lib/products-values';
 import PurchaseDetail from 'components/purchase-detail';
+import config from 'config';
 
 const BusinessPlanDetails = ( { selectedSite, sitePlans, selectedFeature } ) => {
 	const plan = find( sitePlans.data, isBusiness );
@@ -29,7 +30,10 @@ const BusinessPlanDetails = ( { selectedSite, sitePlans, selectedFeature } ) => 
 					href={ '/design/' + selectedSite.slug } />
 			}
 
-			<GoogleVoucherDetails selectedSite={ selectedSite } />
+			{
+				config.isEnabled( 'google-voucher' ) &&
+				<GoogleVoucherDetails selectedSite={ selectedSite } />
+			}
 
 			<PurchaseDetail
 				icon="stats-alt"
