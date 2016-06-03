@@ -2,16 +2,19 @@
 	position: fixed;
 	max-width: 410px;
 	z-index: z-index( 'root', '.guided-tours__step' );
-	border: 1px solid lighten( $gray, 10 );
-	box-shadow: 0 2px 4px 0 rgba( $gray-dark, 0.15 );
+	// border: 1px solid lighten( $gray, 10 );
+	// box-shadow: 0 2px 4px 0 rgba( $gray-dark, 0.15 );
 	border-radius: 4px;
 	padding-top: 19px;
 	margin-left: 5px;
 	margin-right: 5px;
 	font-size: 14px;
 
+	border: darken( $gray, 52% );
+	background: darken( $gray, 52% );
+
 	.guided-tours__step-text {
-		color: $gray-dark;
+		color: $white;
 		margin-bottom: 16px;
 	}
 
@@ -55,6 +58,11 @@
 	.button:nth-child(1) {
 		margin-right: 4%;
 	}
+	.button:nth-child(2) {
+		color: darken( $white, 20% );
+		background: none;
+		border: none;
+	}
 }
 
 .guided-tours__single-button-row {
@@ -97,21 +105,22 @@
 
 // glowing outline
 .guided-tours__step-glow {
-	border: none;
-	box-shadow:
-		0 0 0 1px $blue-dark,
-		0 0 0 5px $blue-light;
+	// border: none;
+	// box-shadow:
+	// 	0 0 0 1px $blue-dark,
+	// 	0 0 0 5px $blue-light;
 }
 
 // arrow if we have a target
 .guided-tours__step-pointing:before {
 	position: absolute;
-	box-shadow:
-		-1px -1px 0 0 $blue-dark,
-		-4px -4px 0 2px $blue-light;
+	border: darken( $gray, 52% );
+	// box-shadow:
+	// 	-1px -1px 0 0 $blue-dark,
+	// 	-4px -4px 0 2px $blue-light;
 	content: " ";
 	pointer-events: none;
-	background: $white;
+	background: darken( $gray, 52% );
 	width: 12px;
 	height: 12px;
 }
